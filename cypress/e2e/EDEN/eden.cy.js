@@ -1,9 +1,11 @@
 /// <reference types="cypress" />
-import EdenHome from "../../Page/edenHome";
-import EdenHeader from "../../Page/edenHeader";
-import EdenEvent from "../../Page/edenEvent";
+import EdenHome from "../../Page/eden/edenHome";
 const edenHome = new EdenHome();
+
+import EdenHeader from "../../Page/eden/edenHeader";
 const edenHeader = new EdenHeader();
+
+import EdenEvent from "../../Page/eden/edenEvents";
 const edenEvent = new EdenEvent();
 
 describe("Test sobre la página de EDEN ENTRADAS", () => {
@@ -53,22 +55,40 @@ describe("Test sobre la página de EDEN ENTRADAS", () => {
         "https://static.edenentradas.com.ar/sitio/images/logo.gif"
       );
     edenHeader.getImgLogo().should("have.attr", "alt", "EdenEntradas");
-    edenHeader.getImgLogo().should("be.visible")
-      .and("have.prop", "naturalHeight").and("be.greaterThan", 0);
+    edenHeader
+      .getImgLogo()
+      .should("be.visible")
+      .and("have.prop", "naturalHeight")
+      .and("be.greaterThan", 0);
   });
 
   it("Buscador", () => {
     cy.visit("https://www.edenentradas.com.ar/");
     edenHeader.getSearchInput().type("Queen");
     edenHeader.getSearchSuggestion().contains("Queen").click();
-    edenEvent.getEventTitle().should("have.text", 'Experiencia Queen "Champions of the World Tour 23" ')
+    edenEvent
+      .getEventTitle()
+      .should(
+        "have.text",
+        'Experiencia Queen "Champions of the World Tour 23" '
+      );
   });
 
-  it.only("Calendario", () => {
+  it("Calendario", () => {
     cy.visit("https://www.edenentradas.com.ar/");
     const nombresMeses = [
-      "Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio",
-      "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"
+      "Enero",
+      "Febrero",
+      "Marzo",
+      "Abril",
+      "Mayo",
+      "Junio",
+      "Julio",
+      "Agosto",
+      "Septiembre",
+      "Octubre",
+      "Noviembre",
+      "Diciembre",
     ];
     const fechaActual = new Date();
     const mesActual = fechaActual.getMonth();
@@ -81,12 +101,17 @@ describe("Test sobre la página de EDEN ENTRADAS", () => {
     cy.log(diaActual); // Por ejemplo, "31"
     edenHome.getCalendarTitle().should("contain.text", nombreMesActual);
     edenHome.getCalendarTitle().should("contain.text", anioActual);
-    
-    edenHome.getCalendar().find('td').each((cuadradoDia, $inx) => {
-      if($inx < diaActual){
-        cy.wrap(cuadradoDia).should("have.class", "ui-datepicker-unselectable ui-state-disabled")
-      }
-    });
-    
+
+    edenHome
+      .getCalendar()
+      .find("td")
+      .each((cuadradoDia, $inx) => {
+        if ($inx < diaActual) {
+          cy.wrap(cuadradoDia).should(
+            "have.class",
+            "ui-datepicker-unselectable ui-state-disabled"
+          );
+        }
+      });
   });
 });
